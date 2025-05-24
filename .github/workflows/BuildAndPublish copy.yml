@@ -6,6 +6,8 @@ on:
       - "main"
 
   workflow_dispatch:
+  repository_dispatch:
+    types: [infrarust-released]
 
 jobs:
   build:
