@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
       - name: Fetch the latest release of Infrarust
         run: gh release download -R shadowner/infrarust -p 'infrarust-linux-x86_64.tar.gz'

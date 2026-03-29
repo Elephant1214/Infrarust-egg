@@ -4,19 +4,19 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2024-02-05T22:54:33+01:00",
-    "name": "Basic - Three Servers",
+    "exported_at": "2026-03-29T00:00:00+00:00",
+    "name": "Infrarust V2 - Three Servers",
     "author": "the.shadowners@gmail.com ",
-    "description": "The basic installation on infrared with three proxies configurable via environment variables.",
+    "description": "Infrarust V2 reverse proxy with three servers configurable via environment variables. Uses TOML configuration format. Automatically migrates V1 configs on first start.",
     "features": null,
     "docker_images": {
         "shadowner\/infrarust-egg:latest": "shadowner\/infrarust-egg:latest"
     },
     "file_denylist": [],
-    "startup": "infrarust --config-path /home/container/config.yml --proxies-path /home/container/proxies",
+    "startup": "infrarust --config /home/container/infrarust.toml",
     "config": {
-        "files": "{\r\n    \"config.yml\": {\r\n        \"parser\": \"yaml\",\r\n        \"find\": {\r\n            \"bind\": \"0.0.0.0:{{server.build.default.port}}\",\r\n            \"keepAliveTimeout\": \"{{env.keepAliveTimeout}}s\",\r\n            \"filters.rateLimiter.requestLimit\": \"{{env.rateLimiterMaxRequests}}\",\r\n            \"filters.rateLimiter.windowLength\": \"{{env.rateLimiterTimeWindow}}s\"\r\n        }\r\n    }\r\n}",
-        "startup": "{\r\n    \"done\": \"Listening on \"\r\n}",
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"proxy server listening\"\r\n}",
         "logs": "{}",
         "stop": "^C"
     },
@@ -29,9 +29,9 @@
     },
     "variables": [
         {
-            "name": "Keep Alive Timeout",
-            "description": "Maximum duration between packets before the client gets timed out.",
-            "env_variable": "keepAliveTimeout",
+            "name": "Keepalive Time",
+            "description": "TCP keepalive time in seconds. Duration before the first keepalive probe is sent.",
+            "env_variable": "KEEPALIVE_TIME",
             "default_value": "30",
             "user_viewable": true,
             "user_editable": true,
@@ -39,9 +39,9 @@
             "field_type": "text"
         },
         {
-            "name": "Rate Limiter - Request Limit",
-            "description": "Request Limit is the amount of times an IP address can create a new connection before it gets blocked.",
-            "env_variable": "rateLimiterMaxRequests",
+            "name": "Rate Limit - Max Connections",
+            "description": "Maximum number of new connections an IP address can create within the rate limit window.",
+            "env_variable": "RATE_LIMIT_MAX",
             "default_value": "10",
             "user_viewable": true,
             "user_editable": true,
@@ -49,9 +49,9 @@
             "field_type": "text"
         },
         {
-            "name": "Rate Limiter - Window Length",
-            "description": "Windows Length is the time frame for the Request Limit.",
-            "env_variable": "rateLimiterTimeWindow",
+            "name": "Rate Limit - Window",
+            "description": "Time window in seconds for the rate limit.",
+            "env_variable": "RATE_LIMIT_WINDOW",
             "default_value": "1",
             "user_viewable": true,
             "user_editable": true,
@@ -59,8 +59,8 @@
             "field_type": "text"
         },
         {
-            "name": "Proxy - #1 Domains",
-            "description": "A list of domains for the addresses listed, separated by a coma.",
+            "name": "Server #1 - Domains",
+            "description": "Comma-separated list of domains that route to this server.",
             "env_variable": "DOMAINS_1",
             "default_value": "localhost",
             "user_viewable": true,
@@ -69,9 +69,9 @@
             "field_type": "text"
         },
         {
-            "name": "Proxy - #1 Addresses",
-            "description": "A list of addresses including ports separated by a coma.",
-            "env_variable": "ADDRESSES_2",
+            "name": "Server #1 - Addresses",
+            "description": "Comma-separated list of backend addresses (host:port).",
+            "env_variable": "ADDRESSES_1",
             "default_value": "127.0.0.1:25565",
             "user_viewable": true,
             "user_editable": true,
@@ -79,8 +79,8 @@
             "field_type": "text"
         },
         {
-            "name": "Proxy - #2 Domains",
-            "description": "A list of domains for the addresses listed, separated by a coma.",
+            "name": "Server #2 - Domains",
+            "description": "Comma-separated list of domains that route to this server.",
             "env_variable": "DOMAINS_2",
             "default_value": "localhost",
             "user_viewable": true,
@@ -89,8 +89,8 @@
             "field_type": "text"
         },
         {
-            "name": "Proxy - #2 Addresses",
-            "description": "A list of addresses including ports separated by a coma.",
+            "name": "Server #2 - Addresses",
+            "description": "Comma-separated list of backend addresses (host:port).",
             "env_variable": "ADDRESSES_2",
             "default_value": "127.0.0.1:25565",
             "user_viewable": true,
@@ -99,8 +99,8 @@
             "field_type": "text"
         },
         {
-            "name": "Proxy - #3 Domains",
-            "description": "A list of domains for the addresses listed, separated by a coma.",
+            "name": "Server #3 - Domains",
+            "description": "Comma-separated list of domains that route to this server.",
             "env_variable": "DOMAINS_3",
             "default_value": "localhost",
             "user_viewable": true,
@@ -109,8 +109,8 @@
             "field_type": "text"
         },
         {
-            "name": "Proxy - #3 Addresses",
-            "description": "A list of addresses including ports separated by a coma.",
+            "name": "Server #3 - Addresses",
+            "description": "Comma-separated list of backend addresses (host:port).",
             "env_variable": "ADDRESSES_3",
             "default_value": "127.0.0.1:25565",
             "user_viewable": true,
@@ -119,8 +119,8 @@
             "field_type": "text"
         },
         {
-            "name": "Proxy Count",
-            "description": "Used to keep track of the number of proxies to create.",
+            "name": "Server Count",
+            "description": "Used to keep track of the number of servers to create.",
             "env_variable": "PROXY_COUNT",
             "default_value": "3",
             "user_viewable": false,
