@@ -18,7 +18,7 @@ RUN chmod +x /bin/infrarust
 COPY entrypoint.sh /bin/entrypoint.sh
 RUN chmod +x /bin/entrypoint.sh
 
-FROM debian:12-slim
+FROM gcr.io/distroless/cc-debian12
 
 # Copy user and group information
 COPY --from=prepare /etc/passwd /etc/passwd
@@ -26,7 +26,6 @@ COPY --from=prepare /etc/group /etc/group
 
 # Copy the executable
 COPY --from=prepare /bin/infrarust /bin/infrarust
-COPY --from=prepare /bin/entrypoint.sh /bin/entrypoint.sh
 
 # Copy home directory structure
 COPY --from=prepare --chown=container:container /home/container /home/container
@@ -43,4 +42,5 @@ WORKDIR /home/container
 VOLUME ["/home/container"]
 EXPOSE 25565
 
-ENTRYPOINT ["/bin/bash", "/bin/entrypoint.sh"]
+ENTRYPOINT ["/bin/infrarust"]
+CMD ["--config", "/home/container/infrarust.toml"]

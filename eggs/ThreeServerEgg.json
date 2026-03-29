@@ -16,7 +16,7 @@
     "startup": "infrarust --config /home/container/infrarust.toml",
     "config": {
         "files": "{}",
-        "startup": "{\r\n    \"done\": \"proxy server listening\"\r\n}",
+        "startup": "proxy server listening",
         "logs": "{}",
         "stop": "^C"
     },
