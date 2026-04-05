@@ -6,7 +6,7 @@
     },
     "exported_at": "2026-03-29T00:00:00+00:00",
     "name": "Infrarust V2 - Three Servers",
-    "author": "the.shadowners@gmail.com ",
+    "author": "the.shadowners@gmail.com",
     "description": "Infrarust V2 reverse proxy with three servers configurable via environment variables. Uses TOML configuration format. Automatically migrates V1 configs on first start.",
     "features": null,
     "docker_images": {
@@ -16,7 +16,7 @@
     "startup": "infrarust --config /home/container/infrarust.toml",
     "config": {
         "files": "{}",
-        "startup": "proxy server listening",
+        "startup": "{\n    \"done\": \"proxy server listening\"\n}",
         "logs": "{}",
         "stop": "^C"
     },
